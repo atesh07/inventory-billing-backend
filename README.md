@@ -9,11 +9,12 @@ A simple backend for small businesses to manage products, contacts (customers/ve
 - Minimal controllers/routes with basic validation & error handling
 
 ## Run Locally
-```bash
+```
 git clone <your-fork-url>
 cd inventory-billing-backend
 cp .env.example .env
 npm install
+npm run seed
 npm run dev
 ```
 Make sure MongoDB is running (local or Atlas).
