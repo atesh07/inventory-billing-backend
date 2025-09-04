@@ -8,6 +8,9 @@ A simple backend for small businesses to manage products, contacts (customers/ve
 - JWT (jsonwebtoken), bcrypt, dotenv, cors, morgan
 - Minimal controllers/routes with basic validation & error handling
 
+🚀 Live Demo
+Backend API deployed on Render:
+👉 https://inventory-billing-backend-g8kp.onrender.com
 ## Run Locally
 ```
 git clone <https://github.com/atesh07/inventory-billing-backend>
