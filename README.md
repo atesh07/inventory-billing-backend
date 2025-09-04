@@ -10,9 +10,9 @@ A simple backend for small businesses to manage products, contacts (customers/ve
 
 ## Run Locally
 ```
-git clone <your-fork-url>
+git clone <https://github.com/atesh07/inventory-billing-backend>
 cd inventory-billing-backend
-cp .env.example .env
+cp .env
 npm install
 npm run seed
 npm run dev
@@ -22,8 +22,9 @@ Make sure MongoDB is running (local or Atlas).
 ## ENV
 ```
 PORT=4000
-MONGODB_URI=mongodb://localhost:27017/inventory_billing
+MONGODB_URI=mongodb+srv://ehtesham007:123123123@inventory-billing-backe.zquxqln.mongodb.net/inventory?retryWrites=true&w=majority&appName=inventory-billing-backend
 JWT_SECRET=supersecretjwtkey
+
 ```
 
 ## API
