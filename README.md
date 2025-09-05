@@ -11,6 +11,13 @@ A simple backend for small businesses to manage products, contacts (customers/ve
 🚀 Live Demo
 Backend API deployed on Render:
 👉 https://inventory-billing-backend-g8kp.onrender.com
+
+## 🎥 Project Introduction  
+
+To get an overview of the Inventory Billing Backend and its features, you can watch the introduction video here:  
+
+[![Watch the Introduction Video](https://img.youtube.com/vi/QJl6bUMy6-4/0.jpg)](https://youtu.be/QJl6bUMy6-4?si=rB8D3DyKQ_P-_7p_)
+
 ## Run Locally
 ```
 git clone <https://github.com/atesh07/inventory-billing-backend>
