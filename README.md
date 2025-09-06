@@ -93,125 +93,224 @@ npm run seed
 ```
 Login with `demo@example.com` / `demo123`.
 
-Here is all data which is use in postman ()-------------->
+Here’s a clean, professional, and well-structured version of your instructions for a **GitHub README**:
 
-0) Quick check server is running
+---
+
+# Inventory & Billing API — Quick Start
+
+This guide walks you through testing the **Inventory & Billing API** using `curl`. Follow the steps below to register, authenticate, and interact with the server.
+
+---
+
+## 0️⃣ Check Server Status
+
+Verify the server is running:
+
+```bash
 curl http://localhost:4000/
- Expect: {"status":"ok"}
+# Expected response: {"status":"ok"}
+```
 
-1) Register (optional — use seed user if you already seeded)
+---
+
+## 1️⃣ Register (Optional)
+
+If you don’t have a user yet, register a new account:
+
+```bash
 curl -s -X POST http://localhost:4000/api/register \
   -H "Content-Type: application/json" \
-  -d '{"email":"newuser@example.com","username":"newuser","businessName":"My Shop","password":"demo123"}'
-Response includes token and user.
+  -d '{
+    "email":"newuser@example.com",
+    "username":"newuser",
+    "businessName":"My Shop",
+    "password":"demo123"
+  }'
+```
 
-2) Login — get JWT token (store in shell variable)
-Manual copy method: copy the token string from response and run:
+> Response includes a JWT token and user details. If you already seeded a user, skip this step.
+
+---
+
+## 2️⃣ Login and Get JWT Token
+
+### Manual:
+
+Copy the token string from the response:
+
+```bash
 export TOKEN="eyJ...paste_here..."
-Automatic (if you have jq):
+```
+
+### Automatic (requires `jq`):
+
+```bash
 export TOKEN=$(curl -s -X POST http://localhost:4000/api/login \
   -H "Content-Type: application/json" \
   -d '{"email":"newuser@example.com","password":"demo123"}' | jq -r '.token')
 echo $TOKEN
+```
 
-3) Verify protected route works (products list)
+---
+
+## 3️⃣ Verify Protected Route
+
+Check that authenticated routes work:
+
+```bash
 curl -s -H "Authorization: Bearer $TOKEN" http://localhost:4000/api/products | jq .
- If no jq, just:
- curl -H "Authorization: Bearer $TOKEN" http://localhost:4000/api/products
+```
 
-4) Create a product
-curl -s -X POST http://localhost:4000/api/products \
-  -H "Content-Type: application/json" \
-  -H "Authorization: Bearer $TOKEN" \
-  -d '{"name":"Notebook","description":"A5 ruled","price":50,"stock":100,"category":"Stationery"}' | jq .
-Save _id from response as PRODUCT_ID:
+---
+
+## 4️⃣ Create a Product
+
+```bash
 export PRODUCT_ID=$(curl -s -X POST http://localhost:4000/api/products \
   -H "Content-Type: application/json" \
   -H "Authorization: Bearer $TOKEN" \
-  -d '{"name":"Notebook","description":"A5 ruled","price":50,"stock":100,"category":"Stationery"}' | jq -r '._id')
+  -d '{
+    "name":"Notebook",
+    "description":"A5 ruled",
+    "price":50,
+    "stock":100,
+    "category":"Stationery"
+  }' | jq -r '._id')
 echo $PRODUCT_ID
-(If you already have products, you can list and pick one:
-curl -s -H "Authorization: Bearer $TOKEN" http://localhost:4000/api/products | jq . 
-)
+```
 
-5) Create a contact (customer)
-curl -s -X POST http://localhost:4000/api/contacts \
-  -H "Content-Type: application/json" \
-  -H "Authorization: Bearer $TOKEN" \
-  -d '{"name":"John Customer","type":"customer","email":"john@x.com","phone":"9999999999","address":"City"}' | jq .
-Save CONTACT_ID:
+> Or list existing products:
+
+```bash
+curl -s -H "Authorization: Bearer $TOKEN" http://localhost:4000/api/products | jq .
+```
+
+---
+
+## 5️⃣ Create a Contact (Customer)
+
+```bash
 export CONTACT_ID=$(curl -s -X POST http://localhost:4000/api/contacts \
   -H "Content-Type: application/json" \
   -H "Authorization: Bearer $TOKEN" \
-  -d '{"name":"John Customer","type":"customer","email":"john@x.com","phone":"9999999999","address":"City"}' | jq -r '._id')
+  -d '{
+    "name":"John Customer",
+    "type":"customer",
+    "email":"john@x.com",
+    "phone":"9999999999",
+    "address":"City"
+  }' | jq -r '._id')
 echo $CONTACT_ID
-(Or list contacts:)
-curl -s -H "Authorization: Bearer $TOKEN" http://localhost:4000/api/contacts | jq .
+```
 
-6) Create a SALE transaction (this will decrease product stock)
-Important: server expects type and products array with productId, quantity, price. Server computes totalAmount automatically.
-Use the IDs saved above:
+> Or list contacts:
+
+```bash
+curl -s -H "Authorization: Bearer $TOKEN" http://localhost:4000/api/contacts | jq .
+```
+
+---
+
+## 6️⃣ Create a Sale Transaction
+
+Decrease product stock by creating a sale:
+
+```bash
 curl -s -X POST http://localhost:4000/api/transactions \
   -H "Content-Type: application/json" \
   -H "Authorization: Bearer $TOKEN" \
   -d '{
     "type":"sale",
     "customerId":"'"$CONTACT_ID"'",
-    "products":[
-      {"productId":"'"$PRODUCT_ID"'","quantity":2,"price":50}
-    ],
+    "products":[{"productId":"'"$PRODUCT_ID"'","quantity":2,"price":50}],
     "date":"2025-09-05"
   }' | jq .
-Response: created transaction. Check that totalAmount is correct and stock updated.
+```
 
-7) Create a PURCHASE transaction (this will increase stock)
+> Verify `totalAmount` and updated stock.
+
+---
+
+## 7️⃣ Create a Purchase Transaction
+
+Increase stock by creating a purchase:
+
+```bash
 curl -s -X POST http://localhost:4000/api/transactions \
   -H "Content-Type: application/json" \
   -H "Authorization: Bearer $TOKEN" \
   -d '{
     "type":"purchase",
     "vendorId":"'"$CONTACT_ID"'",
-    "products":[
-      {"productId":"'"$PRODUCT_ID"'","quantity":20,"price":40}
-    ]
+    "products":[{"productId":"'"$PRODUCT_ID"'","quantity":20,"price":40}]
   }' | jq .
+```
 
-8) List Transactions
-curl -s -H "Authorization: Bearer $TOKEN" "http://localhost:4000/api/transactions" | jq .
- Filter by type/date:
+---
+
+## 8️⃣ List Transactions
+
+```bash
+curl -s -H "Authorization: Bearer $TOKEN" http://localhost:4000/api/transactions | jq .
+```
+
+> Filter by type/date:
+
+```bash
 curl -s -H "Authorization: Bearer $TOKEN" "http://localhost:4000/api/transactions?type=sale&from=2025-01-01&to=2025-12-31" | jq .
+```
 
-9) Check Inventory (report)
+---
+
+## 9️⃣ Check Inventory
+
+```bash
 curl -s -H "Authorization: Bearer $TOKEN" http://localhost:4000/api/reports/inventory | jq .
-You’ll see name, stock, price etc — confirm stock changed after sale/purchase.
+```
 
-10) Update / Delete examples
-Update product
+> Confirms stock changes after sale/purchase.
+
+---
+
+## 🔟 Update / Delete Examples
+
+### Update Product:
+
+```bash
 curl -s -X PUT http://localhost:4000/api/products/$PRODUCT_ID \
   -H "Content-Type: application/json" \
   -H "Authorization: Bearer $TOKEN" \
   -d '{"price":60,"stock":150}' | jq .
-Delete contact
+```
+
+### Delete Contact:
+
+```bash
 curl -s -X DELETE http://localhost:4000/api/contacts/$CONTACT_ID \
   -H "Authorization: Bearer $TOKEN" | jq .
+```
 
-11) Logout (client-side)
-Call logout (server returns message but token is not invalidated on server):
+---
+
+## 1️⃣1️⃣ Logout (Client-Side)
+
+```bash
 curl -s -X GET http://localhost:4000/api/logout -H "Authorization: Bearer $TOKEN" | jq .
- Then remove token locally:
- unset TOKEN
- or in Postman clear environment variable {{token}}
+unset TOKEN
+```
 
-12) Login again (to get a fresh token)
+> Or clear your token in Postman.
+
+---
+
+## 1️⃣2️⃣ Login Again (Fresh Token)
+
+```bash
 export TOKEN=$(curl -s -X POST http://localhost:4000/api/login \
   -H "Content-Type: application/json" \
   -d '{"email":"newuser@example.com","password":"demo123"}' | jq -r '.token')
 echo $TOKEN
-Now you can continue testing with the new token.
-
-
-
-
-
+```
 
 
