@@ -1,3 +1,6 @@
+require('dotenv').config({
+  path: process.env.NODE_ENV === 'production' ? '.env' : '.env.local'
+});
 require('dotenv').config();
 const mongoose = require('mongoose');
 const User = require('./models/User');
