@@ -97,7 +97,7 @@ Here is all data which is use in postman ()-------------->
 
 0) Quick check server is running
 curl http://localhost:4000/
-# Expect: {"status":"ok"}
+ Expect: {"status":"ok"}
 
 1) Register (optional — use seed user if you already seeded)
 curl -s -X POST http://localhost:4000/api/register \
@@ -116,8 +116,8 @@ echo $TOKEN
 
 3) Verify protected route works (products list)
 curl -s -H "Authorization: Bearer $TOKEN" http://localhost:4000/api/products | jq .
-# If no jq, just:
-# curl -H "Authorization: Bearer $TOKEN" http://localhost:4000/api/products
+ If no jq, just:
+ curl -H "Authorization: Bearer $TOKEN" http://localhost:4000/api/products
 
 4) Create a product
 curl -s -X POST http://localhost:4000/api/products \
@@ -178,7 +178,7 @@ curl -s -X POST http://localhost:4000/api/transactions \
 
 8) List Transactions
 curl -s -H "Authorization: Bearer $TOKEN" "http://localhost:4000/api/transactions" | jq .
-# Filter by type/date:
+ Filter by type/date:
 curl -s -H "Authorization: Bearer $TOKEN" "http://localhost:4000/api/transactions?type=sale&from=2025-01-01&to=2025-12-31" | jq .
 
 9) Check Inventory (report)
@@ -198,9 +198,9 @@ curl -s -X DELETE http://localhost:4000/api/contacts/$CONTACT_ID \
 11) Logout (client-side)
 Call logout (server returns message but token is not invalidated on server):
 curl -s -X GET http://localhost:4000/api/logout -H "Authorization: Bearer $TOKEN" | jq .
-# Then remove token locally:
-unset TOKEN
-# or in Postman clear environment variable {{token}}
+ Then remove token locally:
+ unset TOKEN
+ or in Postman clear environment variable {{token}}
 
 12) Login again (to get a fresh token)
 export TOKEN=$(curl -s -X POST http://localhost:4000/api/login \
